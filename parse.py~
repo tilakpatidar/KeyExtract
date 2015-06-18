@@ -27,8 +27,7 @@ def load_file(html_file,url):
 		filter_dom()#removes unwanted tags desc in config.json
 		createKeyStore()#extracts keys from special tags defined in config.json
 		__key_store["url"]=addWordsFromUrl(url)#extracts keys from url
-		__frequency=getFrequency()
-		#get frequency from body tag only words above base_count defined in config.json will be obtained
+		__frequency=getFrequency()#get frequency from body tag only words above base_count defined in config.json will be obtained
 		print __frequency
 	except IOError as e:
 		print "[ERROR] File not found :"+url
