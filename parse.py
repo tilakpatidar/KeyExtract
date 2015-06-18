@@ -100,8 +100,7 @@ def removeVerbs(data):
 	return " ".join(temp).lower()
 def removeStopWords(data):
 	"""Removes stop words"""
-	#return " ".join([i for i in data.split() if i not in stop])
-	return data
+	return " ".join([i for i in data.split() if i not in stop])
 def remove_punctuations(s):
         #This one does not remove the hash tags
         try:

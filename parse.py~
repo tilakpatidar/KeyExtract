@@ -38,7 +38,7 @@ def getFrequency():
 	vals=[]
 	for k in __key_store.values():
 		vals+=k
-	count_dict=list(filter_data(" ".join(__key_store.values())).lower().split(" "))
+	count_dict=list(filter_data(" ".join(vals)).lower().split(" "))
 	counts2 = Counter(count_dict)
 	for c in counts2:
 		counts2[c]=1000
@@ -101,7 +101,6 @@ def removeVerbs(data):
 def removeStopWords(data):
 	"""Removes stop words"""
 	#return " ".join([i for i in data.split() if i not in stop])
-	return data
 def remove_punctuations(s):
         #This one does not remove the hash tags
         try:
