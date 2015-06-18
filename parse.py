@@ -35,7 +35,10 @@ def getFrequency():
 	"""Returns dic of keywords to the score"""
 	list1=list(removeVerbs(filter_data(__soup.find("body").text.lower())).split(" "))
 	counts1 = Counter(list1)
-	count_dict=list(filter_data(" ".join(__key_store.values())).lower().split(" "))
+	vals=[]
+	for k in __key_store.values():
+		vals+=k
+	count_dict=list(filter_data(" ".join(vals)).lower().split(" "))
 	counts2 = Counter(count_dict)
 	for c in counts2:
 		counts2[c]=1000
