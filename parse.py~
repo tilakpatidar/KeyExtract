@@ -27,7 +27,8 @@ def load_file(html_file,url):
 		filter_dom()#removes unwanted tags desc in config.json
 		createKeyStore()#extracts keys from special tags defined in config.json
 		__key_store["url"]=addWordsFromUrl(url)#extracts keys from url
-		__frequency=getFrequency()#get frequency from body tag only words above base_count defined in config.json will be obtained
+		__frequency=getFrequency()
+		#get frequency from body tag only words above base_count defined in config.json will be obtained
 		print __frequency
 	except IOError as e:
 		print "[ERROR] File not found :"+url
@@ -113,13 +114,15 @@ def filter_dom():
 		print "[ERROR] in filter_dom()"
 		raise Exception
 def removeVerbs(data):
-	"""Removes verbs from data Only remove verbs from html content not special tags like title"""
+	"""Removes verbs from data Only remove verbs from html content not special tags like title.
+	Most of the words like playing etc are not useful.And if they are for example a page on HOW TO PLAY FOOTBALL even if we remove verbs from body but we are not removing verbs from special tags as a result we will only
+	get usefull verbs in context with the subject as these verbs are present in special tags"""
 	try:
 		tokens = nltk.word_tokenize(data)
 		tagged = nltk.pos_tag(tokens)
 		temp=[]
 		for t in tagged:
-			if t[1][0]!="N":
+			if t[1][0]!="V":
 				temp.append(t[0])
 		return " ".join(temp).lower()
 	except Exception as e:

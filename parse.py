@@ -114,13 +114,15 @@ def filter_dom():
 		print "[ERROR] in filter_dom()"
 		raise Exception
 def removeVerbs(data):
-	"""Removes verbs from data Only remove verbs from html content not special tags like title"""
+	"""Removes verbs from data. Only remove verbs from body content not special tags like title.
+	Most of the words like playing etc are not useful.And if they are,for example a page on HOW TO PLAY FOOTBALL even if we remove verbs from body but we are not removing verbs from special tags as a result we will only
+	get usefull verbs in context with the subject as these verbs are present in special tags"""
 	try:
 		tokens = nltk.word_tokenize(data)
 		tagged = nltk.pos_tag(tokens)
 		temp=[]
 		for t in tagged:
-			if t[1][0]!="N":
+			if t[1][0]!="V":
 				temp.append(t[0])
 		return " ".join(temp).lower()
 	except Exception as e:
