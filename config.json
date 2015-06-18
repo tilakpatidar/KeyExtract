@@ -1,1 +1,1 @@
-{"REMOVE": ["table","script","style","link","noscript","img","form","input","header","footer","code","pre","button","select","nav"],"ALLOWED":["h1","h2","h3","h4","h5","h6","b","u","strong","title","blockquote","a"],"BASE_COUNT":5}
+{"REMOVE": ["table","script","style","link","noscript","img","form","input","header","footer","code","pre","button","select","nav"],"ALLOWED":["h1","h2","h3","h4","h5","h6","b","u","strong","title","blockquote"],"BASE_COUNT":5}
