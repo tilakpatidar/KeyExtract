@@ -50,7 +50,7 @@ def getFrequency():
 		temp["SPECIAL_TAGS"]=counts2
 		for c in counts1:
 			if counts1[c]>=__config["BASE_COUNT"]:
-				temp["NORMAL_TAGS"][c]=counts[c]
+				temp["NORMAL_TAGS"][c]=1counts[c]
 		return temp
 	except Exception as e:
 		print "[ERROR] in getFrequency()"
