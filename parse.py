@@ -138,7 +138,7 @@ def removeStopWords(data):
 def remove_punctuations(s):
         #This one does not remove the hash tags
         try:
-                output = re.sub(r'[\'\.\,-\/!<>?$#"%\^&\*;:\+{}=\-_`~()\[\]]'," ",s)
+                output = re.sub(r'[\'\.\,-\/!<>?|$#"%\^&\*;:\+{}=\-_`~()\[\]]'," ",s)
                 output = re.sub(r'\s+'," ", output).strip()
                 return output
         except Exception as e:
