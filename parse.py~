@@ -2,6 +2,7 @@ import json,re
 from bs4 import BeautifulSoup as bs
 from collections import Counter
 import nltk
+from urllib2 import urlparse as u
 stop = nltk.corpus.stopwords.words('english')
 #globals
 __config={}
@@ -16,16 +17,18 @@ def load_config():
 	except Exception as e:
 		print "[ERROR] Config Missing ./config.json"
 		raise Exception
-def load_file(url,css,js):
-	"""Loads a html file into dom with css and js files paths"""
+def load_file(html_file,url):
+	"""Loads a html file into dom Main function of the program"""
 	try:
 		global __key_store,__soup,__frequency
 		load_config()
-		html_data=open(url,"r").read()
+		html_data=open(html_file,"r").read()
 		__soup=bs(html_data)
 		filter_dom()
 		createKeyStore()
+		__key_store["url"]=addWordsFromUrl(url)
 		__frequency=getFrequency()
+		print __frequency
 	except IOError as e:
 		print "[ERROR] File not found :"+url
 	except Exception as e:
@@ -47,7 +50,7 @@ def getFrequency():
 	for c in counts:
 		if counts[c]>=__config["BASE_COUNT"]:
 			temp[c]=counts[c]
-	print temp
+	return temp
 def createKeyStore():
 	allowedTags=__config["ALLOWED"]
 	#Finding all meta tags
@@ -100,7 +103,7 @@ def removeVerbs(data):
 	return " ".join(temp).lower()
 def removeStopWords(data):
 	"""Removes stop words"""
-	#return " ".join([i for i in data.split() if i not in stop])
+	return " ".join([i for i in data.split() if i not in stop])
 def remove_punctuations(s):
         #This one does not remove the hash tags
         try:
@@ -109,3 +112,16 @@ def remove_punctuations(s):
                 return output
         except:
                 return ""
+def addWordsFromUrl(url):
+	parts=u.urlparse(url)
+	netloc=parts[1].replace("."," ")
+	path=parts[2].replace("/"," ")
+	query=parts[4].split("&")
+	t=[]
+	for q in query:
+		t+=remove_punctuations(q.split("=")[1]).split(" ")
+	#Things to be done removing .com .net etc
+	#Filtering enocoding types present in url
+	return filter_data(" ".join(t)).split(" ")
+	
+
