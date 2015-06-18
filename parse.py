@@ -38,7 +38,7 @@ def load_file(html_file,url):
 def getFrequency():
 	"""Returns dic of keywords to the score"""
 	try:
-		list1=list(removeVerbs(filter_data(__soup.find("body").text.lower())).split(" "))
+		list1=removeVerbs(filter_data(__soup.find("body").text.lower()))
 		counts1 = Counter(list1)
 		vals=[]
 		for k in __key_store.values():
@@ -64,8 +64,8 @@ def createKeyStore():
 			__key_store["meta"]=[]
 			temp=[]
 			for meta in metas:
-				temp+=filter_data(meta.get("content").lower()).split(" ")
-			__key_store["meta"]=getOccuredWords(temp)
+				temp+=meta.get("content").lower().split(" ")
+			__key_store["meta"]=getOccuredWords(filter_data(" ".join(temp)))
 			__key_store["meta"]=list(set(__key_store["meta"]))#Removing duplicates
 		for allow in allowedTags:
 			addTagKeyStore(allow)
@@ -127,7 +127,7 @@ def removeVerbs(data):
 		for t in tagged:
 			if t[1][0]!="V":
 				temp.append(t[0])
-		return " ".join(temp).lower()
+		return temp
 	except Exception as e:
 		print "[ERROR] in removeVerbs()"
 		raise Exception
@@ -168,5 +168,5 @@ def addWordsFromUrl(url):
 		raise Exception
 def getOccuredWords(data):
 	"""Returns words from data which are present in body"""
-	return " ".join(list(set(__soup.find("body").text.lower().split(" ")).intersection(set(data))))
+	return list(set(__soup.find("body").text.lower().split(" ")).intersection(set(data.split(" "))))
 
