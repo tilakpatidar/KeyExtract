@@ -40,11 +40,7 @@ def getFrequency():
 	for c in counts2:
 		counts2[c]=1000
 	counts=counts1+counts2
-	temp={}
-	for c in counts:
-		if counts[c]>=__config["BASE_COUNT"]:
-			temp[c]=counts[c]
-	print temp
+	print counts
 def createKeyStore():
 	allowedTags=__config["ALLOWED"]
 	#Finding all meta tags
