@@ -47,7 +47,7 @@ def getFrequency():
 		counts2 = Counter(count_dict)
 		temp={}
 		temp["NORMAL_TAGS"]={}
-		temp["SPECIAL_TAGS"]=counts2
+		temp["SPECIAL_TAGS"]=dict(counts2)
 		for c in counts1:
 			if counts1[c]>=__config["BASE_COUNT"]:
 				temp["NORMAL_TAGS"][c]=counts1[c]
@@ -62,8 +62,10 @@ def createKeyStore():
 		metas=__soup.findAll("meta")
 		if not metas is None:
 			__key_store["meta"]=[]
+			temp=[]
 			for meta in metas:
-				__key_store["meta"]=__key_store["meta"]+filter_data(meta.get("content").lower()).split(" ")
+				temp+=filter_data(meta.get("content").lower()).split(" ")
+			__key_store["meta"]=getOccuredWords(temp)
 			__key_store["meta"]=list(set(__key_store["meta"]))#Removing duplicates
 		for allow in allowedTags:
 			addTagKeyStore(allow)
@@ -74,6 +76,8 @@ def createKeyStore():
 		print "[ERROR] in createKeyStore()"
 		raise Exception
 def addTagKeyStore(tag):
+	"""Special tags are allowed.Be specific while selecting tag in config.json as taking tags which are usually
+	used as parent tags will result is taking entire content Ex: allowing divs will have entire content"""
 	try:
 		ts=__soup.findAll(tag)
 		if not ts is None:
@@ -162,5 +166,7 @@ def addWordsFromUrl(url):
 	except Exception as e:
 		print "[ERROR] in addWordsFromUrl()"
 		raise Exception
-	
+def getOccuredWords(data):
+	"""Returns words from data which are present in body"""
+	return " ".join(list(set(__soup.find("body").text.lower().split(" ")).intersection(set(data))))
 
