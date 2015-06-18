@@ -45,13 +45,12 @@ def getFrequency():
 			vals+=k
 		count_dict=list(filter_data(" ".join(vals)).lower().split(" "))
 		counts2 = Counter(count_dict)
-		for c in counts2:
-			counts2[c]=1000
-		counts=counts1+counts2
 		temp={}
-		for c in counts:
-			if counts[c]>=__config["BASE_COUNT"]:
-				temp[c]=counts[c]
+		temp["NORMAL_TAGS"]={}
+		temp["SPECIAL_TAGS"]=counts2
+		for c in counts1:
+			if counts1[c]>=__config["BASE_COUNT"]:
+				temp["NORMAL_TAGS"][c]=counts[c]
 		return temp
 	except Exception as e:
 		print "[ERROR] in getFrequency()"
@@ -138,7 +137,7 @@ def removeStopWords(data):
 def remove_punctuations(s):
         #This one does not remove the hash tags
         try:
-                output = re.sub(r'[\'\.\,-\/!<>?$#"%\^&\*;:\+{}=\-_`~()\[\]]'," ",s)
+                output = re.sub(r'[\'\.\,-\/!<>?|$#"%\^&\*;:\+{}=\-_`~()\[\]]'," ",s)
                 output = re.sub(r'\s+'," ", output).strip()
                 return output
         except Exception as e:
