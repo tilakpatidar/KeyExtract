@@ -120,9 +120,10 @@ def addWordsFromUrl(url):
 	t=[]
 	for q in query:
 		try:
-			t+=remove_punctuations(q.split("=")[1]).split(" ")
+			t+=q.split("=")[1].split(" ")
 		except IndexError as e:
-			t+=remove_punctuations(q.split("=")[0]).split(" ")
+			t+=q.split("=")[0].split(" ")
+	t+=(path+netloc).split(" ")
 	#Things to be done removing .com .net etc
 	#Filtering enocoding types present in url
 	return filter_data(" ".join(t)).split(" ")
