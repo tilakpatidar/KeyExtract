@@ -33,7 +33,7 @@ def load_file(url,css,js):
 		print e
 def getFrequency():
 	"""Returns dic of keywords to the score"""
-	list1=list(removeVerbs(filter_data(__soup.text.lower()).split(" ")))
+	list1=list(removeVerbs(filter_data(__soup.text.lower())).split(" "))
 	counts = Counter(list1)
 	#print counts
 def createKeyStore():
@@ -79,7 +79,13 @@ def filter_dom():
 				t.decompose()
 def removeVerbs(data):
 	"""Removes verbs from data Only remove verbs from html content not special tags like title"""
-	return data
+	tokens = nltk.word_tokenize(data)
+	tagged = nltk.pos_tag(tokens)
+	temp=[]
+	for t in tagged:
+		if t[1][0]!="N":
+			temp.append(t[0])
+	return " ".join(temp).lower()
 def removeStopWords(data):
 	"""Removes stop words"""
 	#return " ".join([i for i in data.split() if i not in stop])
