@@ -33,6 +33,7 @@ def getKeywords():
 		#Errors propagate here
 		print e
 def load_dom(dom):
+	global __soup
 	__soup=dom
 def getFrequency():
 	"""Returns dic of keywords to the score"""

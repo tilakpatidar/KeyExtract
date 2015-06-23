@@ -108,10 +108,10 @@ def filter_dom():
 	try:
 		global __soup,__config
 		for tag in __config["REMOVE"]:
-			temp=__soup.find_elements_by_css_selector(tag)
-			if not temp is None:
-				for t in temp:
-					t.decompose()
+			__soup.execute_script("""var element = document.getElementsByTagName("div");
+for (index = element.length - 1; index >= 0; index--) {
+    element[index].parentNode.removeChild(element[index]);
+}""");
 	except Exception as e:
 		print "[ERROR] in filter_dom()"
 		raise Exception
