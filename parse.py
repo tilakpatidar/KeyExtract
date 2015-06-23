@@ -168,4 +168,5 @@ def addWordsFromUrl(url):
 def getOccuredWords(data):
 	"""Returns words from data which are present in body"""
 	return list(set(__soup.find("body").text.split(" ")).intersection(set(data.split(" "))))
-
+def removeNonAscii(data):
+	return str(filter(lambda x:ord(x)>31 and ord(x)<128,data))
