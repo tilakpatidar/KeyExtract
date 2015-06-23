@@ -111,7 +111,7 @@ def filter_dom():
 	try:
 		global __soup,__config
 		for tag in __config["REMOVE"]:
-			__soup.execute_script("""var element = document.getElementsByTagName("div");
+			__soup.execute_script("""var element = document.getElementsByTagName('"""+tag+"""');
 for (index = element.length - 1; index >= 0; index--) {
     element[index].parentNode.removeChild(element[index]);
 }""");
