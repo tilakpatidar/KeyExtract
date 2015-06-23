@@ -24,7 +24,7 @@ def getKeywords():
 		load_config()#Loads config from json file
 		filter_dom()#removes unwanted tags desc in config.json
 		createKeyStore()#extracts keys from special tags defined in config.json
-		__key_store["url"]=addWordsFromUrl(url)#extracts keys from url
+		__key_store["url"]=addWordsFromUrl(__url)#extracts keys from url
 		__frequency=getFrequency()
 		#get frequency from body tag only words above base_count defined in config.json will be obtained
 		print __frequency
@@ -169,7 +169,7 @@ def addWordsFromUrl(url):
 		print "[ERROR] in addWordsFromUrl()"
 		raise Exception
 def getOccuredWords(data):
-		global __soup
+	global __soup
 	try:
 		"""Returns words from data which are present in body"""
 		return list(set(__soup.find_elements_by_css_selector("body")[0].text.split(" ")).intersection(set(data.split(" "))))
