@@ -40,7 +40,7 @@ def load_dom(dom,url):
 def getFrequency():
 	"""Returns dic of keywords to the score"""
 	try:
-		list1=removeVerbs(filter_data(__soup.find("body").text))
+		list1=removeVerbs(filter_data(__soup.find("body")[0].text))
 		counts1 = Counter(list1)
 		vals=[]
 		for k in __key_store.values():
