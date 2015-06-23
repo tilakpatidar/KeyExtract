@@ -8,7 +8,7 @@ def __main__():
 	#Saving rendered page for future use
 	fil=open("./crawlNEW/"+__url.replace("/","##"),"w")
 	fil.write(__url+"###split###")
-	fil.write(str(data[0])+"\n")
+	fil.write(data[0])+"\n")
 	fil.close()
 	#Passing the driver object to the parser
 	Parse.load_dom(data[1])
