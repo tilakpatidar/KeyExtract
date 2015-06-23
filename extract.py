@@ -3,7 +3,7 @@ import browser as Browser
 import sys
 __url=None
 def __main__():
-	Browser.initBrowser(no_css=True,no_images=True)#start phantomJS
+	Browser.initBrowser(no_images=True)#start phantomJS
 	data=Browser.fetch(__url)#fetch the rendered page
 	#Saving rendered page for future use
 	fil=open("./crawlNEW/"+__url.replace("/","##"),"w")

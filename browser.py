@@ -1,6 +1,6 @@
 from selenium import webdriver
 __driver=None
-def initBrowser(no_css,no_images):
+def initBrowser(no_images):
 	global __driver
 	options = []
 	if no_images:

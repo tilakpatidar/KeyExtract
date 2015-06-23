@@ -5,7 +5,7 @@ def initBrowser(no_css,no_images):
 	options = []
 	if no_images:
 		options.append('--load-images=false')
-	__driver = webdriver.PhantomJS('/usr/local/bin/phantomjs',options)
+	__driver = webdriver.PhantomJS('/usr/local/bin/phantomjs',service_args=options)
 def closeBrowser():
 	__driver.quit()
 def fetch(url):
