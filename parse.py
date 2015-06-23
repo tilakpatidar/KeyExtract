@@ -40,7 +40,7 @@ def load_dom(dom,url):
 def getFrequency():
 	"""Returns dic of keywords to the score"""
 	try:
-		list1=removeVerbs(filter_data(__soup.find_elements_by_css_selector("body")[0].text))
+		list1=removeVerbs(filter_data(__soup.find_element_by_tag_name("body")[0].text))
 		counts1 = Counter(list1)
 		vals=[]
 		for k in __key_store.values():
@@ -172,7 +172,7 @@ def getOccuredWords(data):
 	global __soup
 	try:
 		"""Returns words from data which are present in body"""
-		return list(set(__soup.find_elements_by_css_selector("body")[0].text.split(" ")).intersection(set(data.split(" "))))
+		return list(set(__soup.find_element_by_tag_name("body")[0].text.split(" ")).intersection(set(data.split(" "))))
 	except Exception as e:
 		print "[ERROR] in getOccuredWords()"
 		raise Exception
