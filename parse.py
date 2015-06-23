@@ -67,7 +67,7 @@ def createKeyStore():
 			temp=[]
 			for meta in metas:
 				temp+=meta.get_attribute("content").lower().split(" ")
-			__key_store["meta"]=getOccuredWords(filter_data(" ".join(temp)))
+			#__key_store["meta"]=getOccuredWords(filter_data(" ".join(temp)))
 			__key_store["meta"]=list(set(__key_store["meta"]))#Removing duplicates
 		for allow in allowedTags:
 			addTagKeyStore(allow)
