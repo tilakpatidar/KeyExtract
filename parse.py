@@ -1,5 +1,4 @@
 import json,re
-from bs4 import BeautifulSoup as bs
 from collections import Counter
 import nltk
 from urllib2 import urlparse as u
@@ -17,13 +16,11 @@ def load_config():
 	except Exception as e:
 		print "[ERROR] Config Missing ./config.json"
 		raise Exception
-def load_file(html_file,url):
+def getKeywords():
 	"""Loads a html file into dom Main function of the program"""
 	try:
 		global __key_store,__soup,__frequency
 		load_config()#Loads config from json file
-		html_data=open(html_file,"r").read()
-		__soup=bs(html_data)#creates soup object
 		filter_dom()#removes unwanted tags desc in config.json
 		createKeyStore()#extracts keys from special tags defined in config.json
 		__key_store["url"]=addWordsFromUrl(url)#extracts keys from url
@@ -35,15 +32,17 @@ def load_file(html_file,url):
 	except Exception as e:
 		#Errors propagate here
 		print e
+def load_dom(dom):
+	__soup=dom
 def getFrequency():
 	"""Returns dic of keywords to the score"""
 	try:
-		list1=removeVerbs(filter_data(__soup.find("body").text.lower()))
+		list1=removeVerbs(filter_data(__soup.find("body").text))
 		counts1 = Counter(list1)
 		vals=[]
 		for k in __key_store.values():
 			vals+=k
-		count_dict=list(filter_data(" ".join(vals)).lower().split(" "))
+		count_dict=list(filter_data(" ".join(vals)).split(" "))
 		counts2 = Counter(count_dict)
 		temp={}
 		temp["NORMAL_TAGS"]={}
@@ -59,12 +58,12 @@ def createKeyStore():
 	try:
 		allowedTags=__config["ALLOWED"]
 		#Finding all meta tags
-		metas=__soup.findAll("meta")
+		metas=__soup.find_elements_by_css_selector("meta")
 		if not metas is None:
 			__key_store["meta"]=[]
 			temp=[]
 			for meta in metas:
-				temp+=meta.get("content").lower().split(" ")
+				temp+=meta.get_attribute("content").split(" ")
 			__key_store["meta"]=getOccuredWords(filter_data(" ".join(temp)))
 			__key_store["meta"]=list(set(__key_store["meta"]))#Removing duplicates
 		for allow in allowedTags:
@@ -79,11 +78,11 @@ def addTagKeyStore(tag):
 	"""Special tags are allowed.Be specific while selecting tag in config.json as taking tags which are usually
 	used as parent tags will result is taking entire content Ex: allowing divs will have entire content"""
 	try:
-		ts=__soup.findAll(tag)
+		ts=__soup.find_elements_by_css_selector(tag)
 		if not ts is None:
 			__key_store[tag]=[]
 			for t in ts:
-				__key_store[tag]=__key_store[tag]+filter_data(t.text.lower()).split(" ")
+				__key_store[tag]=__key_store[tag]+filter_data(t.text).split(" ")
 			__key_store[tag]=list(set(__key_store[tag]))#Removing duplicates
 	except Exception as e:
 		print "[ERROR] in addTagKeyStore()"
@@ -109,7 +108,7 @@ def filter_dom():
 	try:
 		global __soup,__config
 		for tag in __config["REMOVE"]:
-			temp=__soup.findAll(tag)
+			temp=__soup.find_elements_by_css_selector(tag)
 			if not temp is None:
 				for t in temp:
 					t.decompose()
@@ -168,5 +167,5 @@ def addWordsFromUrl(url):
 		raise Exception
 def getOccuredWords(data):
 	"""Returns words from data which are present in body"""
-	return list(set(__soup.find("body").text.lower().split(" ")).intersection(set(data.split(" "))))
+	return list(set(__soup.find("body").text.split(" ")).intersection(set(data.split(" "))))
 
