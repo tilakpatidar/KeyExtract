@@ -1,7 +1,6 @@
 from selenium import webdriver
 __driver=None
 def initBrowser():
-	global __driver
 	__driver = webdriver.PhantomJS()
 def closeBrowser():
 	__driver.quit()
