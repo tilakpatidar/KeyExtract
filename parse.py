@@ -167,7 +167,11 @@ def addWordsFromUrl(url):
 		print "[ERROR] in addWordsFromUrl()"
 		raise Exception
 def getOccuredWords(data):
-	"""Returns words from data which are present in body"""
-	return list(set(__soup.find("body").text.split(" ")).intersection(set(data.split(" "))))
+	try:
+		"""Returns words from data which are present in body"""
+		return list(set(__soup.find_elements_by_css_selector("body").text.split(" ")).intersection(set(data.split(" "))))
+	except Exception as e:
+		print "[ERROR] in getOccuredWords()"
+		raise Exception
 def removeNonAscii(data):
 	return str(filter(lambda x:ord(x)>31 and ord(x)<128,data))
