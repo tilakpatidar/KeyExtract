@@ -169,7 +169,7 @@ def addWordsFromUrl(url):
 def getOccuredWords(data):
 	try:
 		"""Returns words from data which are present in body"""
-		return list(set(__soup.find_elements_by_css_selector("body").text.split(" ")).intersection(set(data.split(" "))))
+		return list(set(__soup.find_elements_by_css_selector("body")[0].text.split(" ")).intersection(set(data.split(" "))))
 	except Exception as e:
 		print "[ERROR] in getOccuredWords()"
 		raise Exception
