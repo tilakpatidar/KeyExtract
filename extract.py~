@@ -6,7 +6,7 @@ def __main__():
 	Browser.initBrowser()#start phantomJS
 	data=Browser.fetch(__url,True,True)#fetch the rendered page
 	#Saving rendered page for future use
-	fil=open("./crawlNEW/"+__url.replace("/","##"))
+	fil=open("./crawlNEW/"+__url.replace("/","##"),"w")
 	fil.write(__url+"###split###")
 	fil.write(str(body)+"\n")
 	fil.close()
