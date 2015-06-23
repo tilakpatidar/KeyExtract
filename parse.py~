@@ -7,6 +7,7 @@ stop = nltk.corpus.stopwords.words('english')
 __config={}
 __key_store={}
 __soup=None
+__url=None
 def load_config():
 	"""Loads the global config from the config.json file"""
 	try:
@@ -32,9 +33,10 @@ def getKeywords():
 	except Exception as e:
 		#Errors propagate here
 		print e
-def load_dom(dom):
-	global __soup
+def load_dom(dom,url):
+	global __soup,__url
 	__soup=dom
+	__url=url
 def getFrequency():
 	"""Returns dic of keywords to the score"""
 	try:
@@ -167,9 +169,10 @@ def addWordsFromUrl(url):
 		print "[ERROR] in addWordsFromUrl()"
 		raise Exception
 def getOccuredWords(data):
+		global __soup
 	try:
 		"""Returns words from data which are present in body"""
-		return list(set(__soup.find_elements_by_css_selector("body").text.split(" ")).intersection(set(data.split(" "))))
+		return list(set(__soup.find_elements_by_css_selector("body")[0].text.split(" ")).intersection(set(data.split(" "))))
 	except Exception as e:
 		print "[ERROR] in getOccuredWords()"
 		raise Exception

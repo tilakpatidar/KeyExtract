@@ -11,7 +11,7 @@ def __main__():
 	fil.write(Parse.removeNonAscii(data[0])+"\n")
 	fil.close()
 	#Passing the driver object to the parser
-	Parse.load_dom(data[1])
+	Parse.load_dom(data[1],__url)
 	Parse.getKeywords()
 	Browser.closeBrowser()
 if __name__=="__main__":
