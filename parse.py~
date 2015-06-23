@@ -172,7 +172,7 @@ def getOccuredWords(data):
 	global __soup
 	try:
 		"""Returns words from data which are present in body"""
-		return list(set(__soup.find_element_by_tag_name("body")[0].text.split(" ")).intersection(set(data.split(" "))))
+		return list(set(__soup.find_element_by_tag_name("body").text.split(" ")).intersection(set(data.split(" "))))
 	except Exception as e:
 		print "[ERROR] in getOccuredWords()"
 		raise Exception
