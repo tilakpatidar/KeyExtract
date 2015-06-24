@@ -89,7 +89,7 @@ def addWords(li,tag):
 	map(addWord,li)
 	__addWordTag=None
 def addWord(word):
-	global __addWordTag,__once
+	global __addWordTag,__once,__key_store
 	try:
 		temp=__key_store[word]
 		if temp==(__config["BASE_COUNT"]-1):
