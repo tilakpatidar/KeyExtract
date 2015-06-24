@@ -93,7 +93,10 @@ def addWord(word):
 	try:
 		temp=__key_store[word]
 		if temp >=__config["BASE_COUNT"]:
-			del __once[word]
+			try:
+				del __once[word]
+			except KeyError:
+				pass
 		__key_store[word]=temp+1
 	except KeyError:
 		#hence word not present just give its score next time only frequency will be increased
