@@ -92,7 +92,7 @@ def addWord(word):
 	global __addWordTag,__once,__key_store
 	try:
 		temp=__key_store[word]
-		if temp==(__config["BASE_COUNT"]-1):
+		if temp==(__config["BASE_COUNT"]-1) or temp >=__config["BASE_COUNT"]:
 			del __once[word]
 		__key_store[word]=temp+1
 	except KeyError:
