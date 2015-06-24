@@ -115,7 +115,32 @@ def filter_dom():
 			__soup.execute_script("""var element = document.getElementsByTagName('"""+tag+"""');
 for (index = element.length - 1; index >= 0; index--) {
     element[index].parentNode.removeChild(element[index]);
-}""");
+}
+//js code to remove comments and unnecessary whitespaces and new lines
+function clean(node)
+{
+  for(var n = 0; n < node.childNodes.length; n ++)
+  {
+    var child = node.childNodes[n];
+    if
+    (
+      child.nodeType === 8 
+      || 
+      (child.nodeType === 3 && !/\S/.test(child.nodeValue))
+    )
+    {
+      node.removeChild(child);
+      n --;
+    }
+    else if(child.nodeType === 1)
+    {
+      clean(child);
+    }
+  }
+}
+clean(document);
+
+""");
 	except Exception as e:
 		print "[ERROR] in filter_dom()"
 		raise Exception
