@@ -24,7 +24,7 @@ def load_config():
 def getKeywords():
 	"""Loads a html file into dom Main function of the program"""
 	try:
-		global __key_store,__soup,__frequency
+		global __key_store,__soup,__once
 		load_config()#Loads config from json file
 		createKeyStore()#extracts keys from special tags defined in config.json
 		filter_dom()#removes unwanted tags desc in config.json
@@ -92,7 +92,7 @@ def addWord(word):
 	global __addWordTag,__once,__key_store
 	try:
 		temp=__key_store[word]
-		if temp==(__config["BASE_COUNT"]-1) or temp >=__config["BASE_COUNT"]:
+		if temp >=__config["BASE_COUNT"]:
 			del __once[word]
 		__key_store[word]=temp+1
 	except KeyError:
