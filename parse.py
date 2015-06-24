@@ -80,6 +80,7 @@ def addTagKeyStore(tag):
 		raise Exception
 def addWords(li,tag):
 	global __addWordTag
+	li=map(getStem,li)
 	__addWordTag=tag
 	map(addWord,li)
 def addWord(word):

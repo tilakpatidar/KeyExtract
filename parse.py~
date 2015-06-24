@@ -81,7 +81,7 @@ def addTagKeyStore(tag):
 def addWords(li,tag):
 	global __addWordTag
 	__addWordTag=tag
-	map(li,addWord)
+	map(addWord,li)
 def addWord(word):
 	global __addWordTag
 	try:
