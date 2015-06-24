@@ -83,14 +83,18 @@ def addTagKeyStore(tag):
 		raise Exception
 def addWords(li,tag):
 	global __addWordTag
-	li=map(getStem,li)
+	if not tag in __config["NO_STEM"]:#No stemming for special tags
+		li=map(getStem,li)
 	__addWordTag=tag
 	map(addWord,li)
+	__addWordTag=None
 def addWord(word):
-	global __addWordTag,__once
+	global __addWordTag,__once,__key_store
 	try:
-		__key_store[word]+=1
-		del __once[word]
+		temp=__key_store[word]
+		if temp==(__config["BASE_COUNT"]-1):
+			del __once[word]
+		__key_store[word]=temp+1
 	except KeyError:
 		#hence word not present just give its score next time only frequency will be increased
 		__key_store[word]=__config["WEIGHT"][__addWordTag]
@@ -223,3 +227,5 @@ def removeTag(tag):
 for (index = element.length - 1; index >= 0; index--) {
     element[index].parentNode.removeChild(element[index]);
 }""")
+def getWordsFromAnchorTags():
+	
