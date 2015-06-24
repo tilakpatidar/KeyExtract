@@ -1,6 +1,6 @@
 import json,re
-from collections import Counter
 import nltk
+from nltk.stem.lancaster import LancasterStemmer as LS
 from urllib2 import urlparse as u
 stop = nltk.corpus.stopwords.words('english')
 #globals
@@ -8,6 +8,9 @@ __config={}
 __key_store={}
 __soup=None
 __url=None
+__addWordTag=None
+lancaster_stemmer = LS()
+__stem_cache={}
 def load_config():
 	"""Loads the global config from the config.json file"""
 	try:
@@ -24,10 +27,9 @@ def getKeywords():
 		load_config()#Loads config from json file
 		filter_dom()#removes unwanted tags desc in config.json
 		createKeyStore()#extracts keys from special tags defined in config.json
-		__key_store["url"]=addWordsFromUrl(__url)#extracts keys from url
-		__frequency=getFrequency()
-		#get frequency from body tag only words above base_count defined in config.json will be obtained
-		print __frequency
+		addWordsFromUrl(__url)#extracts keys from url
+		addNormalWords()
+		print __key_store
 	except IOError as e:
 		print "[ERROR] File not found :"+url
 	except Exception as e:
@@ -37,44 +39,28 @@ def load_dom(dom,url):
 	global __soup,__url
 	__soup=dom
 	__url=url
-def getFrequency():
-	"""Returns dic of keywords to the score"""
+def addNormalWords():
+	"""Adds rest of normal words to the key store"""
 	try:
 		list1=removeVerbs(filter_data(__soup.find_element_by_tag_name("body").text.lower()))
-		counts1 = Counter(list1)
-		vals=[]
-		for k in __key_store.values():
-			vals+=k
-		count_dict=list(filter_data(" ".join(vals)).split(" "))
-		counts2 = Counter(count_dict)
-		temp={}
-		temp["NORMAL_TAGS"]={}
-		temp["SPECIAL_TAGS"]=dict(counts2)
-		for c in counts1:
-			if counts1[c]>=__config["BASE_COUNT"]:
-				temp["NORMAL_TAGS"][c]=counts1[c]
-		return temp
+		addWords(list1,"normal")
 	except Exception as e:
-		print "[ERROR] in getFrequency()"
+		print "[ERROR] in addNormalWords()"
 		raise Exception
 def createKeyStore():
 	try:
+		global __addWordTag
 		allowedTags=__config["ALLOWED"]
 		#Finding all meta tags
 		metas=__soup.find_elements_by_css_selector("meta")
 		if not metas is None:
-			__key_store["meta"]=[]
 			temp=[]
 			for meta in metas:
-				temp+=meta.get_attribute("content").lower().split(" ")
-			#__key_store["meta"]=getOccuredWords(filter_data(" ".join(temp)))
-			__key_store["meta"]=list(set(temp))#Removing duplicates
-			print __key_store["meta"]
+				temp+=filter_data(meta.get_attribute("content").lower()).split(" ")
+			addWords(temp,"meta")
+			removeTag("meta")
 		for allow in allowedTags:
 			addTagKeyStore(allow)
-		if len(__key_store.keys())==0:
-			print "[ERROR] No tags found"
-			raise Exception
 	except Exception as e:
 		print "[ERROR] in createKeyStore()"
 		raise Exception
@@ -84,13 +70,25 @@ def addTagKeyStore(tag):
 	try:
 		ts=__soup.find_elements_by_css_selector(tag)
 		if not ts is None:
-			__key_store[tag]=[]
+			temp=[]
 			for t in ts:
-				__key_store[tag]=__key_store[tag]+filter_data(t.text.lower()).split(" ")
-			__key_store[tag]=list(set(__key_store[tag]))#Removing duplicates
+				temp=temp+filter_data(t.text.lower()).split(" ")
+			addWords(temp,tag)
+			removeTag(tag)
 	except Exception as e:
 		print "[ERROR] in addTagKeyStore()"
 		raise Exception
+def addWords(li,tag):
+	global __addWordTag
+	__addWordTag=tag
+	map(li,addWord)
+def addWord(word):
+	global __addWordTag
+	try:
+		__key_store[word]+=1
+	except KeyError:
+		#hence word not present just give its score next time only frequency will be increased
+		__key_store[word]=__config["WEIGHT"][__addWordTag]
 def filter_data(data):
 	try:
 		#Removing stop words
@@ -138,6 +136,7 @@ function clean(node)
     }
   }
 }
+clean(document);
 
 """);
 	except Exception as e:
@@ -189,7 +188,8 @@ def addWordsFromUrl(url):
 		t+=(path+netloc).split(" ")
 		#Things to be done removing .com .net etc
 		#Filtering enocoding types present in url
-		return filter_data(" ".join(t)).split(" ")
+		li=filter_data(" ".join(t)).split(" ")
+		addWords(li,"url")
 	except Exception as e:
 		print "[ERROR] in addWordsFromUrl()"
 		raise Exception
@@ -203,3 +203,17 @@ def getOccuredWords(data):
 		raise Exception
 def removeNonAscii(data):
 	return str(filter(lambda x:ord(x)>31 and ord(x)<128,data))
+def getStem(word):
+	global lancaster_stemmer,__stem_cache
+	try:
+		return __stem_cache[word]
+	except KeyError:
+		temp=lancaster_stemmer.stem(word)
+		__stem_cache[word]=temp
+		return temp
+def removeTag(tag):
+	global __soup
+	__soup.execute_script("""var element = document.getElementsByTagName('"""+tag+"""');
+for (index = element.length - 1; index >= 0; index--) {
+    element[index].parentNode.removeChild(element[index]);
+}""")
