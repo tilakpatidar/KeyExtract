@@ -26,8 +26,8 @@ def getKeywords():
 	try:
 		global __key_store,__soup,__frequency
 		load_config()#Loads config from json file
-		filter_dom()#removes unwanted tags desc in config.json
 		createKeyStore()#extracts keys from special tags defined in config.json
+		filter_dom()#removes unwanted tags desc in config.json
 		addWordsFromUrl(__url)#extracts keys from url
 		addNormalWords()
 		for a in __once.keys():
@@ -111,7 +111,7 @@ def filter_data(data):
 		#Removing punctuations
 		data=re.sub("&(.*?);"," ",data)#&nbsp; etc
 		data=remove_punctuations(data)
-		data=re.sub("\s+"," ",data)
+		data=re.sub("\s+"," ",data).strip()
 		return data
 	except Exception as e:
 		print "[ERROR] in filter_data()"
