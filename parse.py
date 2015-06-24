@@ -11,6 +11,7 @@ __url=None
 __addWordTag=None
 lancaster_stemmer = LS()
 __stem_cache={}
+__once={}
 def load_config():
 	"""Loads the global config from the config.json file"""
 	try:
@@ -29,6 +30,8 @@ def getKeywords():
 		createKeyStore()#extracts keys from special tags defined in config.json
 		addWordsFromUrl(__url)#extracts keys from url
 		addNormalWords()
+		for a in __once.keys():
+			del __key_store[a]
 		print __key_store
 	except IOError as e:
 		print "[ERROR] File not found :"+url
@@ -84,12 +87,14 @@ def addWords(li,tag):
 	__addWordTag=tag
 	map(addWord,li)
 def addWord(word):
-	global __addWordTag
+	global __addWordTag,__once
 	try:
 		__key_store[word]+=1
+		del __once[word]
 	except KeyError:
 		#hence word not present just give its score next time only frequency will be increased
 		__key_store[word]=__config["WEIGHT"][__addWordTag]
+		__once[word]=0
 def filter_data(data):
 	try:
 		#Removing stop words
